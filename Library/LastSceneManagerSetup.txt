@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/scenes/TelaJogo.unity
+  isLoaded: 1
+  isActive: 1
