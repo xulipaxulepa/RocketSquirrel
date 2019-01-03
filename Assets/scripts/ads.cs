@@ -29,6 +29,7 @@ public class ads : MonoBehaviour {
         if (mostraBanner == false)
         {
             RequestInterstitial();
+            bannerView.Destroy();
         }
 
     }
