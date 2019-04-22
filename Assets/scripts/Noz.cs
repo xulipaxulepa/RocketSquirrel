@@ -8,17 +8,32 @@ public class Noz : MonoBehaviour {
     public bool PowerUpInvencibilidade;
     public bool PowerUpMagnetismo;
     public float speed;
+    public AudioSource[] somNoz;
     Rocket rocket;
     // Use this for initialization
     void Start () {
         rocket = GameObject.Find("rocket_0").GetComponent<Rocket>();
         gamelogic = GameObject.Find("Main Camera").GetComponent<GameLogic>();
+        somNoz = GameObject.Find("Main Camera").GetComponents<AudioSource>();
     }
 
     void OnTriggerEnter2D(Collider2D col)
     {
         if (col.CompareTag("Player"))
         {
+            if (PlayerPrefs.GetInt("Som") == 0)
+            {
+                if (PowerUpInvencibilidade == true || PowerUpVelocidade == true || PowerUpMagnetismo == true)
+                {
+                    somNoz[3].Play();
+                    somNoz[0].volume = 0;
+                }
+                else
+                {
+                    somNoz[1].Play();
+                }
+            }
+            
             if(PowerUpInvencibilidade == true)
             {
                 rocket.PowerUpInvencibilidadeAtivo = true;
@@ -41,12 +56,17 @@ public class Noz : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if (gamelogic.RocketEstaVivo == true)
+        if (gamelogic.RocketEstaVivo == false)
+        {
+			somNoz[3].volume = 0;
+		}
+		
+		if (gamelogic.RocketEstaVivo == true)
         {
             Vector2 pos = transform.position;
             pos.y = pos.y - speed * Time.deltaTime;
             transform.position = pos;
-        }
+        }		
 
         if(transform.position.y <= -8)
         {

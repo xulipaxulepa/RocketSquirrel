@@ -1,19 +1,49 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class TelaInicial : MonoBehaviour {
 
     public Animator AnimaRocketIntro;
     private float count;
     public int indiceanimacao;
-	// Use this for initialization
-	void Start () {
+    AudioSource bgMusic;
+    // Use this for initialization
+    void Start () {
+        PlayerPrefs.SetInt("Morreu", 0);
+        playerOptions();
         count = 0f;
         indiceanimacao = 0;
-	}
-	
-	// Update is called once per frame
-	void Update () {
+        bgMusic = GameObject.Find("Main Camera").GetComponent<AudioSource>();
+
+        if (PlayerPrefs.GetInt("Som") == 0)
+        {
+            bgMusic.Play();
+        }
+    }
+    
+    public void playerOptions()
+    {
+        if (PlayerPrefs.GetInt("Som") == 1)
+        {
+            PlayerPrefs.SetInt("Som", 1);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("Som", 0);
+        }
+        if (PlayerPrefs.GetString("UI") == "Canhoto")
+        {
+            PlayerPrefs.SetString("UI", "Canhoto");
+        }
+        else
+        {
+            PlayerPrefs.SetString("UI", "Destro");
+        }
+    }    
+
+    // Update is called once per frame
+    void Update () {
         count += Time.deltaTime;
 
         if(count > 5f)

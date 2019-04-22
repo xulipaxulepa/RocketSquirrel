@@ -36,20 +36,36 @@ public class GameLogic : MonoBehaviour {
     public int Pontuacao;
     public Rocket rocket;
     public SpriteRenderer brilhoRocket;
+    public SpriteRenderer spriteRocket;
     public float TimerDesativaPowerUp;
     float timerCriaNozes;
     float timerCriaTroncos;
+    float timerRocketMorto;
     public Animator slideToMove;
     public Animator clickToMove;
+    public AudioSource musicaDoJogo;
+    public RectTransform scoreUI;
+    bool subScore;
 
     // Use this for initialization
     void Start () {
+        subScore = true;
         AnimaRocket.Play("intro");
         TimerTroncos = 0;
         timerCriaNozes = 2;
         timerCriaTroncos = 7;
         padroesTroncos = Random.Range(1, 9);
-    }
+        if(PlayerPrefs.GetString("UI") == "Canhoto")
+        {
+            scoreUI.localPosition = new Vector2(292, 546);
+        }        
+
+        if (PlayerPrefs.GetInt("Som") == 0)
+        {
+            musicaDoJogo.Play();
+        }
+
+        }
 
     public void OnGameStart()
     {
@@ -77,15 +93,15 @@ public class GameLogic : MonoBehaviour {
         if(TimerNozesPowerUps > 11 && EscolhePowerUp == 1) {
             Instantiate(NozVelocidade, posicaoNoz, Quaternion.identity);
             TimerNozesPowerUps = 0;
-            EscolhePowerUp = Random.Range(1, 3);
+            EscolhePowerUp = Random.Range(1, 4);
         } else if (TimerNozesPowerUps > 11 && EscolhePowerUp == 2) {
             Instantiate(NozInvencibilidade, posicaoNoz, Quaternion.identity);
             TimerNozesPowerUps = 0;
-            EscolhePowerUp = Random.Range(1, 3);
+            EscolhePowerUp = Random.Range(1, 4);
         } else if (TimerNozesPowerUps > 11 && EscolhePowerUp == 3) {
             Instantiate(NozMagnetismo, posicaoNoz, Quaternion.identity);
             TimerNozesPowerUps = 0;
-            EscolhePowerUp = Random.Range(1, 3);
+            EscolhePowerUp = Random.Range(1, 4);
         }
     }
 
@@ -129,10 +145,10 @@ public class GameLogic : MonoBehaviour {
 
         if (bg1.transform.position.y <= -20.45f)
         {
-            bg1.transform.position = new Vector2(0.03f, bg2.transform.up.y * 20);            
+            bg1.transform.position = new Vector2(0.03f, bg2.transform.up.y * 40.5f);            
         } else if (bg2.transform.position.y <= -20.45f)
         {
-            bg2.transform.position = new Vector2(0.03f, bg1.transform.up.y * 20);
+            bg2.transform.position = new Vector2(0.03f, bg1.transform.up.y * 40.5f);
         }
     }
 
@@ -212,6 +228,8 @@ public class GameLogic : MonoBehaviour {
         {
             TimerDesativaPowerUp += Time.deltaTime;
             brilhoRocket.color = new Color(1f, 0f, 0f, 1f);
+            timerCriaTroncos = timerCriaTroncos * 2;
+            timerCriaNozes = 1;
             speed = 5;
             GameObject[] allObjectsNoz = GameObject.FindGameObjectsWithTag("Noz");
             foreach (GameObject go in allObjectsNoz)
@@ -236,6 +254,7 @@ public class GameLogic : MonoBehaviour {
         {
             TimerDesativaPowerUp += Time.deltaTime;
             brilhoRocket.color = new Color(1f, 1f, 0f, 1f);
+            spriteRocket.color = new Color(1f, 1f, 1f, 0.5f);
             GameObject[] allObjectsTroncos = GameObject.FindGameObjectsWithTag("Tronco");
             foreach (GameObject go in allObjectsTroncos)
             {
@@ -256,8 +275,9 @@ public class GameLogic : MonoBehaviour {
                 go.GetComponent<Troncos>().speed = speed;
                 go.GetComponent<PolygonCollider2D>().enabled = true;
             }
-
+            musicaDoJogo.volume = 1;
             brilhoRocket.color = new Color(1f, 1f, 1f, 0);
+            spriteRocket.color = new Color(1f, 1f, 1f, 1f);
             rocket.PowerUpVelocidadeAtivo = false;
             rocket.PowerUpMagnetismoAtivo = false;
             rocket.PowerUpInvencibilidadeAtivo = false;
@@ -268,9 +288,16 @@ public class GameLogic : MonoBehaviour {
 
     public void DificuldadeJogo()
     {
-        if(Pontuacao >= 5 && Pontuacao < 10)
+        if(Pontuacao >= 5 && Pontuacao < 10 && rocket.PowerUpVelocidadeAtivo == false)
         {
-            timerCriaNozes = 3;
+            if(rocket.PowerUpMagnetismoAtivo == true)
+            {
+                timerCriaNozes = 1;
+            } else
+            {
+                timerCriaNozes = 3;
+            }
+            
             timerCriaTroncos = 5;
             speed = 8;
 
@@ -284,9 +311,16 @@ public class GameLogic : MonoBehaviour {
             {
                 go.GetComponent<Troncos>().speed = speed;
             }
-        } else if (Pontuacao >= 10 && Pontuacao < 15)
+        } else if (Pontuacao >= 10 && Pontuacao < 15 && rocket.PowerUpVelocidadeAtivo == false)
         {
-            timerCriaNozes = 4;
+            if (rocket.PowerUpMagnetismoAtivo == true)
+            {
+                timerCriaNozes = 1;
+            }
+            else
+            {
+                timerCriaNozes = 4;
+            }            
             timerCriaTroncos = 4;
             speed = 9;
 
@@ -300,9 +334,17 @@ public class GameLogic : MonoBehaviour {
             {
                 go.GetComponent<Troncos>().speed = speed;
             }
-        } else if (Pontuacao >= 15 && Pontuacao < 20)
+        } else if (Pontuacao >= 15 && Pontuacao < 20 && rocket.PowerUpVelocidadeAtivo == false)
         {
-            timerCriaNozes = 5;
+            if (rocket.PowerUpMagnetismoAtivo == true)
+            {
+                timerCriaNozes = 1;
+            }
+            else
+            {
+                timerCriaNozes = 5;
+            }
+            
             timerCriaTroncos = 3;
             speed = 10;
 
@@ -316,11 +358,94 @@ public class GameLogic : MonoBehaviour {
             {
                 go.GetComponent<Troncos>().speed = speed;
             }
-        } else if (Pontuacao >= 20 && Pontuacao < 25)
+        } else if (Pontuacao >= 20 && Pontuacao < 25 && rocket.PowerUpVelocidadeAtivo == false)
         {
-            timerCriaNozes = 6;
+            if (rocket.PowerUpMagnetismoAtivo == true)
+            {
+                timerCriaNozes = 1;
+            }
+            else
+            {
+                timerCriaNozes = 6;
+            }
+            
             timerCriaTroncos = 2;
             speed = 11;
+
+            GameObject[] allObjectsNoz = GameObject.FindGameObjectsWithTag("Noz");
+            foreach (GameObject go in allObjectsNoz)
+            {
+                go.GetComponent<Noz>().speed = speed;
+            }
+            GameObject[] allObjectsTroncos = GameObject.FindGameObjectsWithTag("Tronco");
+            foreach (GameObject go in allObjectsTroncos)
+            {
+                go.GetComponent<Troncos>().speed = speed;
+            }
+        }
+        else if (Pontuacao >= 25 && Pontuacao < 30 && rocket.PowerUpVelocidadeAtivo == false)
+        {
+            if (rocket.PowerUpMagnetismoAtivo == true)
+            {
+                timerCriaNozes = 1;
+            }
+            else
+            {
+                timerCriaNozes = 7;
+            }
+            
+            timerCriaTroncos = 2;
+            speed = 12;
+
+            GameObject[] allObjectsNoz = GameObject.FindGameObjectsWithTag("Noz");
+            foreach (GameObject go in allObjectsNoz)
+            {
+                go.GetComponent<Noz>().speed = speed;
+            }
+            GameObject[] allObjectsTroncos = GameObject.FindGameObjectsWithTag("Tronco");
+            foreach (GameObject go in allObjectsTroncos)
+            {
+                go.GetComponent<Troncos>().speed = speed;
+            }
+        }
+        else if (Pontuacao >= 30 && Pontuacao < 35 && rocket.PowerUpVelocidadeAtivo == false)
+        {
+            if (rocket.PowerUpMagnetismoAtivo == true)
+            {
+                timerCriaNozes = 1;
+            }
+            else
+            {
+                timerCriaNozes = 8;
+            }
+            
+            timerCriaTroncos = 2;
+            speed = 13;
+
+            GameObject[] allObjectsNoz = GameObject.FindGameObjectsWithTag("Noz");
+            foreach (GameObject go in allObjectsNoz)
+            {
+                go.GetComponent<Noz>().speed = speed;
+            }
+            GameObject[] allObjectsTroncos = GameObject.FindGameObjectsWithTag("Tronco");
+            foreach (GameObject go in allObjectsTroncos)
+            {
+                go.GetComponent<Troncos>().speed = speed;
+            }
+        }
+        else if (Pontuacao >= 35 && rocket.PowerUpVelocidadeAtivo == false)
+        {
+            if (rocket.PowerUpMagnetismoAtivo == true)
+            {
+                timerCriaNozes = 1;
+            }
+            else
+            {
+                timerCriaNozes = 10;
+            }
+            
+            timerCriaTroncos = 2;
+            speed = 15;
 
             GameObject[] allObjectsNoz = GameObject.FindGameObjectsWithTag("Noz");
             foreach (GameObject go in allObjectsNoz)
@@ -361,15 +486,25 @@ public class GameLogic : MonoBehaviour {
 
         if (RocketEstaVivo == false && IniciouJogo == true)
         {
-            if(Pontuacao > PlayerPrefs.GetInt("HiScore"))
+            timerRocketMorto += Time.deltaTime;
+
+            if(timerRocketMorto < 1 && PlayerPrefs.GetInt("Som") == 0)
             {
-                PlayerPrefs.SetInt("HiScore", Pontuacao);
+                musicaDoJogo.Stop();
+            }
+
+            if (timerRocketMorto > 1)
+            {
+                if (Pontuacao > PlayerPrefs.GetInt("HiScore") && subScore == true)
+                {
+                    subScore = false;
+                    PlayerPrefs.SetInt("HiScore", Pontuacao);
+                    GameObject.Find("Main Camera").GetComponent<LeaderBoards>().SubmitScore(Pontuacao);
+                }
+                gameover.Play();
+                hiscore.text = PlayerPrefs.GetInt("HiScore").ToString();
+                yourscore.text = Pontuacao.ToString();
             }            
-            gameover.Play();
-            hiscore.text = "Your High Score: " + PlayerPrefs.GetInt("HiScore").ToString();
-            yourscore.text = "Points: "+Pontuacao.ToString();
         }
-
-
     }
 }

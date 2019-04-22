@@ -32,8 +32,14 @@ public class Rocket : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate () {
-        
-           
+        if(gamelogic.RocketEstaVivo == false)
+        {
+            Vector2 pos = transform.position;
+            pos.y = pos.y - speed * Time.deltaTime;
+            transform.position = pos;
+
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, -180), Time.deltaTime * 3);
+        }           
 
     }
 }

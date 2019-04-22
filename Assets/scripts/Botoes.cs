@@ -6,8 +6,8 @@ public class Botoes : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
-	}
+        
+    }
 
     public void TelaJogo()
     {
@@ -22,6 +22,11 @@ public class Botoes : MonoBehaviour {
     public void TelaInicial()
     {
         SceneManager.LoadScene("telaInicial");
+    }
+
+    public void TelaOptions()
+    {
+        SceneManager.LoadScene("TelaOptions");
     }
 
     public void SairJogo()

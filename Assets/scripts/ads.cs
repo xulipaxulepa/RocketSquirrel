@@ -3,24 +3,26 @@ using System.Collections;
 using System;
 using GoogleMobileAds.Api;
 
-public class ads : MonoBehaviour {
+public class Ads : MonoBehaviour {
 
     private BannerView bannerView;
-    InterstitialAd interstitial;
+    private InterstitialAd interstitial;
     public bool mostraBanner;
-
+    int morre;
     // Use this for initialization
     void Start () {
+        morre = 0;
 #if UNITY_ANDROID
-        string appId = "ca-app-pub-8594233121600137~2142542911";
+        string appId = "ca-app-pub-8594233121600137~8154801358";
 #elif UNITY_IPHONE
             string appId = "ca-app-pub-3940256099942544~1458002511";
 #else
-        string appId = "unexpected_platform";
+            string appId = "unexpected_platform";
 #endif
 
         // Initialize the Google Mobile Ads SDK.
         MobileAds.Initialize(appId);
+
         if (mostraBanner == true)
         {
             RequestBanner();
@@ -29,22 +31,21 @@ public class ads : MonoBehaviour {
         if (mostraBanner == false)
         {
             RequestInterstitial();
-            bannerView.Destroy();
         }
-
     }
 
-    public void RequestBanner() {
+    private void RequestBanner()
+    {
 #if UNITY_ANDROID
-        string adUnitId = "ca-app-pub-8594233121600137/9312200891";
+        string adUnitId = "ca-app-pub-8594233121600137/4682460205";
 #elif UNITY_IPHONE
             string adUnitId = "ca-app-pub-3940256099942544/2934735716";
 #else
-        string adUnitId = "unexpected_platform";
+            string adUnitId = "unexpected_platform";
 #endif
 
         // Create a 320x50 banner at the top of the screen.
-        bannerView = new BannerView(adUnitId, AdSize.SmartBanner, AdPosition.Top);
+        bannerView = new BannerView(adUnitId, AdSize.SmartBanner, AdPosition.Bottom);
 
         // Called when an ad request has successfully loaded.
         bannerView.OnAdLoaded += HandleOnAdLoaded;
@@ -64,52 +65,10 @@ public class ads : MonoBehaviour {
         bannerView.LoadAd(request);
     }
 
-    private void RequestInterstitial() {
-#if UNITY_ANDROID
-        string adUnitId = "ca-app-pub-8594233121600137/9858995800";
-#elif UNITY_IPHONE
-        string adUnitId = "ca-app-pub-3940256099942544/4411468910";
-#else
-        string adUnitId = "unexpected_platform";
-#endif
-
-        // Initialize an InterstitialAd.
-        interstitial = new InterstitialAd(adUnitId);
-
-        // Called when an ad request has successfully loaded.
-        interstitial.OnAdLoaded += HandleOnAdLoaded;
-        // Called when an ad request failed to load.
-        interstitial.OnAdFailedToLoad += HandleOnAdFailedToLoad;
-        // Called when an ad is shown.
-        interstitial.OnAdOpening += HandleOnAdOpened;
-        // Called when the ad is closed.
-        interstitial.OnAdClosed += HandleOnAdClosed;
-        // Called when the ad click caused the user to leave the application.
-        interstitial.OnAdLeavingApplication += HandleOnAdLeavingApplication;
-
-        // Create an empty ad request.
-        AdRequest request = new AdRequest.Builder().Build();
-        // Load the interstitial with the request.
-        interstitial.LoadAd(request);
-    }
-
-
-    public void showInterstitial()
-    {
-        if (interstitial.IsLoaded())
-        {
-            interstitial.Show();
-        }
-    }
-
-    public void destroyBanner()
-    {
-        bannerView.Destroy();
-    }
-
     public void HandleOnAdLoaded(object sender, EventArgs args)
     {
         MonoBehaviour.print("HandleAdLoaded event received");
+        
     }
 
     public void HandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
@@ -133,9 +92,71 @@ public class ads : MonoBehaviour {
         MonoBehaviour.print("HandleAdLeavingApplication event received");
     }
 
+    private void RequestInterstitial()
+    {
+#if UNITY_ANDROID
+        string adUnitId = "ca-app-pub-8594233121600137/8665759634";
+#elif UNITY_IPHONE
+        string adUnitId = "ca-app-pub-3940256099942544/4411468910";
+#else
+        string adUnitId = "unexpected_platform";
+#endif
+
+        // Initialize an InterstitialAd.
+        this.interstitial = new InterstitialAd(adUnitId);
+
+        // Called when an ad request has successfully loaded.
+        this.interstitial.OnAdLoaded += HandleOnAdLoaded;
+        // Called when an ad request failed to load.
+        this.interstitial.OnAdFailedToLoad += HandleOnAdFailedToLoad;
+        // Called when an ad is shown.
+        this.interstitial.OnAdOpening += HandleOnAdOpened;
+        // Called when the ad is closed.
+        this.interstitial.OnAdClosed += HandleOnAdClosed;
+        // Called when the ad click caused the user to leave the application.
+        this.interstitial.OnAdLeavingApplication += HandleOnAdLeavingApplication;
+
+        // Create an empty ad request.
+        AdRequest request = new AdRequest.Builder().Build();
+        // Load the interstitial with the request.
+        this.interstitial.LoadAd(request);
+    }
+
+    public void GameOver()
+    {
+        morre = PlayerPrefs.GetInt("Morreu") + 1;
+        PlayerPrefs.SetInt("Morreu", morre);
+        if(PlayerPrefs.GetInt("Morreu") >= 2)
+        {
+            if (this.interstitial.IsLoaded())
+            {
+                PlayerPrefs.SetInt("Morreu", 0);
+                this.interstitial.Show();
+            }
+        }
+        
+    }
+
+    public void ShowInterstitial()
+    {
+        this.interstitial.Show();
+    }
+
+    public void ExitGame()
+    {
+        if (this.interstitial.IsLoaded())
+            {
+                this.interstitial.Show();
+            }
+    }
+
+    public void destroyBanner()
+    {
+        bannerView.Destroy();
+    }
 
     // Update is called once per frame
     void Update () {
-	
-	}
+        
+    }
 }

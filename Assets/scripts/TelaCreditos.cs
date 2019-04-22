@@ -8,10 +8,16 @@ public class TelaCreditos : MonoBehaviour {
     public Sprite[] textocredito = new Sprite[8];
     public float speed;
     public int indicetextocredito = 0;
-	// Use this for initialization
-	void Start () {
-	
-	}
+    AudioSource bgMusic;
+    // Use this for initialization
+    void Start () {
+        bgMusic = GameObject.Find("Main Camera").GetComponent<AudioSource>();
+
+        if (PlayerPrefs.GetInt("Som") == 0)
+        {
+            bgMusic.Play();
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {

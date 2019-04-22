@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 5ffdf05c6104c654d95142e3b21b4dee
-timeCreated: 1545179215
+timeCreated: 1548517483
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -8,6 +8,7 @@ TextureImporter:
     21300002: BTNs_1
     21300004: BTNs_2
     21300006: BTNs_3
+    21300008: BTNs_4
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -62,7 +63,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 313
+        width: 286
         height: 122
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -73,9 +74,9 @@ TextureImporter:
       name: BTNs_1
       rect:
         serializedVersion: 2
-        x: 324
+        x: 297
         y: 0
-        width: 189
+        width: 205
         height: 122
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -86,10 +87,10 @@ TextureImporter:
       name: BTNs_2
       rect:
         serializedVersion: 2
-        x: 525
-        y: 0
-        width: 233
-        height: 122
+        x: 1001
+        y: 8
+        width: 190
+        height: 103
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -99,10 +100,23 @@ TextureImporter:
       name: BTNs_3
       rect:
         serializedVersion: 2
-        x: 767
+        x: 510
         y: 0
-        width: 247
-        height: 122
+        width: 227
+        height: 119
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: BTNs_4
+      rect:
+        serializedVersion: 2
+        x: 748
+        y: 0
+        width: 248
+        height: 116
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
